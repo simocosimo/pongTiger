@@ -22,6 +22,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "CollisionManager.h"
+#include <math.h>
+#include "timer/timer.h"
 
 /* Private define ------------------------------------------------------------*/
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
@@ -45,6 +47,8 @@ void drawRect(Rect r, uint16_t color) {
 			break;
 		
 		case PADDLE_CENTER:
+		case PADDLE_LEFT:
+		case PADDLE_RIGHT:
 		case H_WALL:
 			for(i = 0; i < r.height; i++) LCD_DrawLine(r.x, r.y + i, r.x + r.width, r.y + i, color);
 			break;
@@ -71,10 +75,17 @@ void drawRect(Rect r, uint16_t color) {
 * Return         : None
 * Attention		 : None
 *******************************************************************************/
-void clearRect(Rect *r) {
+void clearRect(Rect *r, uint8_t update) {
 	drawRect(*r, Black);
-	r->x += r->x_velocity;
-	r->y += r->y_velocity;
+	
+	if(update) {
+		r->x += r->x_velocity;
+		r->y += r->y_velocity;
+		
+		if(r->x < 5) r->x = 5;
+		if(r->x > MAX_X - 5) r->x = MAX_X - 5;
+		if(r->y < 5) r->y = 5;
+	}
 }
 
 /*******************************************************************************
@@ -107,16 +118,56 @@ uint8_t rectCollision(Rect* ball, Rect r) {
 	switch(coll) {
 		case V_WALL:
 			ball->x_velocity *= -1;
+			disable_timer(1);
+			reset_timer(1);
+			init_timer(1,1592);
+			enable_timer(1);
 			break;
 		
 		case H_WALL:
 			ball->y_velocity *= -1;
+			disable_timer(1);
+			reset_timer(1);
+			init_timer(1,1592);
+			enable_timer(1);
 			break;
 		
 		case PADDLE_CENTER:
-			ball->y_velocity *= -1;
-			if(score < 100) score += 5;
-			else score += 10;
+			if(ball->x_velocity < 0) ball->x_velocity = -2;
+			else ball->x_velocity = 2;
+			ball->y_velocity = -2;
+			disable_timer(1);
+			reset_timer(1);
+			init_timer(1,1062);
+			enable_timer(1);
+			break;
+		
+		case PADDLE_LEFT:
+			if(r.x < 80) {
+				ball->x_velocity = -1;	
+				ball->y_velocity = -2;
+			} else {
+				ball->x_velocity = -2;	
+				ball->y_velocity = -1;
+			}
+			disable_timer(1);
+			reset_timer(1);
+			init_timer(1,1062);
+			enable_timer(1);
+			break;
+			
+		case PADDLE_RIGHT:
+			if(r.x + 15 > MAX_X - 80) {
+				ball->x_velocity = 1;	
+				ball->y_velocity = -2;
+			} else {
+				ball->x_velocity = 2;	
+				ball->y_velocity = -1;
+			}
+			disable_timer(1);
+			reset_timer(1);
+			init_timer(1,1062);
+			enable_timer(1);
 			break;
 		
 		case GAME_OVER:

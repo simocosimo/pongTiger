@@ -43,15 +43,14 @@ typedef struct {
 	uint16_t height;
 	RectType type;
 	
-	// variables only for the ball and paddle
-	float_t angle;
-	int16_t x_velocity;
-	int16_t y_velocity;
+	// variables only for the ball
+	float_t x_velocity;
+	float_t y_velocity;
 } Rect;
 
 /* Private function prototypes -----------------------------------------------*/	
 void drawRect(Rect r, uint16_t color);
-void clearRect(Rect* r);
+void clearRect(Rect* r, uint8_t update);
 uint8_t rangeIntersect(uint16_t min0, uint16_t max0, uint16_t min1, uint16_t max1);
 uint8_t rectCollision(Rect* ball, Rect r);
 

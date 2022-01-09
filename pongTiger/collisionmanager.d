@@ -10,3 +10,4 @@
 .\collisionmanager.o: C:\Users\simos\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h
 .\collisionmanager.o: C:\Users\simos\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h
 .\collisionmanager.o: C:\Users\simos\AppData\Local\Arm\Packs\Keil\LPC1700_DFP\2.6.0\Device\Include\system_LPC17xx.h
+.\collisionmanager.o: timer/timer.h
